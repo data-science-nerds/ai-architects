@@ -164,3 +164,4 @@ cython_debug/
 # for data security
 data_ingest/incoming_pdfs/*
 data_ingest/processed_text_files/*
+.DS_Store
