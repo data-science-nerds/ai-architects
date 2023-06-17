@@ -31,7 +31,7 @@ api_key = os.getenv("OPEN_API_KEY")
 # directory_path = '/Users/elsa/Documents/CODE/aiarchitects/data-science-nerds/ai-architects/data_ingest/incoming_pdfs'
 def construct_index(directory_path):
     '''Run models.'''
-    # directory_path = '/Users/elsa/Documents/CODE/aiarchitects/data-science-nerds/ai-architects/data_ingest/incoming_pdfs'
+    directory_path = '/Users/elsa/Documents/CODE/aiarchitects/data-science-nerds/ai-architects/data_ingest/processed_text_files'
 
     # set maximum input size
     max_input_size = 4096
@@ -65,12 +65,13 @@ def ask_ai(documents):
     # print(f'should be feeding this into prompt: promp_prep')
     index = GPTSimpleVectorIndex.load_from_disk('index.json')
     while True:
-        query = input("What do you want to ask? ")
+        query = input("\n\nYOUR QUESTION? ")
         query = f'*** {documents} + {query}'
         response = index.query(query)
         # print(type(response)
         
-        print("Response:", response.response)
+        # print("Response:", response.response)
+        print("***", response.response)
         # import pdb; pdb.set_trace()
 
         # print(repr(response))  # Print the representation of the response object
