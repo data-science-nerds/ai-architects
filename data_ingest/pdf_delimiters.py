@@ -1,4 +1,4 @@
-'''Defines the schema of which sections of the pdf to preserve'''
+'Defines the schema of which sections of the pdf to preserve'''
 
 SECTIONS: list = [# Each pair is a section to extract
         # The first element is the beginning string, and  # second element is the ending string
