@@ -162,8 +162,8 @@ cython_debug/
 
 # ignore any files in the subdirectory incoming pdf's
 # for data security
-data_ingest/incoming_pdfs/*
-# data_ingest/processed_text_files/*
+data_handling/data_ingest/incoming_pdfs/*
+# data_handling/data_ingest/processed_text_files/*
 .DS_Store
 
 rootkey.csv
