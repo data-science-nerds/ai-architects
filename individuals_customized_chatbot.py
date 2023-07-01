@@ -12,7 +12,7 @@ from langchain import OpenAI
 import sys
 from IPython.display import Markdown, display
 
-from utilities.relative_paths import (
+from chatbot_things.utilities.relative_paths import (
     directory_path_already_to_text,
     directory_path_incoming_pdfs,
 )
@@ -30,12 +30,12 @@ subprocess.check_call(["pip", "install", "langchain==0.0.148"])
 
 load_dotenv()  # take environment variables from .env.
 api_key = os.getenv("OPEN_API_KEY")
-   
 
-# directory_path = '/Users/elsa/Documents/CODE/aiarchitects/data-science-nerds/ai-architects/data_handling/data_ingest/incoming_pdfs'
+
+# directory_path = '/Users/elsa/Documents/CODE/aiarchitects/data-science-nerds/ai-architects/chatbot_things/data_handling/data_ingest/incoming_pdfs'
 def construct_index(directory_path):
     '''Run models.'''
-    # directory_path = '/Users/elsa/Documents/CODE/aiarchitects/data-science-nerds/ai-architects/data_handling/data_ingest/processed_text_files'
+    # directory_path = '/Users/elsa/Documents/CODE/aiarchitects/data-science-nerds/ai-architects/chatbot_things/data_handling/data_ingest/processed_text_files'
 
     # set maximum input size
     max_input_size = 4096
@@ -90,10 +90,10 @@ def ask_ai(documents):
 
 if __name__ == "__main__":
     # # Use this path to generate text files
-    # directory_path_incoming_pdfs = '/Users/elsa/Documents/CODE/aiarchitects/data-science-nerds/ai-architects/data_handling/data_ingest/incoming_pdfs'
+    # directory_path_incoming_pdfs = '/Users/elsa/Documents/CODE/aiarchitects/data-science-nerds/ai-architects/chatbot_things/data_handling/data_ingest/incoming_pdfs'
 
     # # Use this path once the files are already made
-    # directory_path_already_to_text = '/Users/elsa/Documents/CODE/aiarchitects/data-science-nerds/ai-architects/data_handling/data_ingest/processed_text_files'
+    # directory_path_already_to_text = '/Users/elsa/Documents/CODE/aiarchitects/data-science-nerds/ai-architects/chatbot_things/data_handling/data_ingest/processed_text_files'
 
     index, documents = construct_index(directory_path_already_to_text)
     ask_ai(documents)

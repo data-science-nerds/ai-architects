@@ -1,8 +1,8 @@
-from utilities.rename_all_files import rename_files
-from data_handling/data_ingest.incoming_pdf_to_text import read_pdfs
-from data_handling/data_cleanse.make_priming import cleanse_text
+from chatbot_things.utilities.rename_all_files import rename_files
+from chatbot_things.data_handling.data_ingest.incoming_pdf_to_text import read_pdfs
+from chatbot_things.data_handling.data_cleanse.make_priming import cleanse_text
 
-incoming_pdfs_path = 'data_handling/data_ingest/incoming_pdfs' #/Users/elsa/Documents/CODE/aiarchitects/data-science-nerds/ai-architects/data_handling/data_ingest/incoming_pdfs'
+incoming_pdfs_path = 'chatbot_things/data_handling/data_ingest/incoming_pdfs' #/Users/elsa/Documents/CODE/aiarchitects/data-science-nerds/ai-architects/chatbot_things/data_handling/data_ingest/incoming_pdfs'
 
 if __name__ == '__main__':
     renamed = False

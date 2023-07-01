@@ -8,7 +8,7 @@ import signal
 # from . import individuals_customized_chatbot as customized
 import individuals_customized_chatbot as customized
 
-from utilities.relative_paths import (
+from chatbot_things.utilities.relative_paths import (
     directory_path_already_to_text,
     directory_path_incoming_pdfs,
 )
