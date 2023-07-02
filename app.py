@@ -6,14 +6,28 @@ import signal
 
 # use customization code
 # from . import individuals_customized_chatbot as customized
-import individuals_customized_chatbot as customized
+import chatbot_things.individuals_customized_chatbot as customized
 
 from chatbot_things.utilities.relative_paths import (
     directory_path_already_to_text,
     directory_path_incoming_pdfs,
 )
 
-app = Flask(__name__)
+from flask import Flask, request, render_template, jsonify
+# other imports...
+
+app = Flask(__name__, template_folder='flask_things/templates', static_folder='flask_things/static')
+
+@app.route("/demo-customized-chatbot", methods=['GET', 'POST'])
+def demo_customized_chatbot():
+    if request.method == 'POST':
+        question = request.form['question']
+        index, documents = customized.construct_index(directory_path_already_to_text)
+        response = customized.ask_ai(question, index, documents)
+        return jsonify({'response': response})
+    else:
+        return render_template('chatbot.html')
+
 
 
 def handle_child_termination(signum, frame):
@@ -42,27 +56,24 @@ def spawn_child_process():
 
     return 'Child process spawned successfully.'
 
-# Flask route for other functionality
 @app.route('/')
 def index():
     # Your other Flask app logic
-    return 'Hello, World!'
+    return render_template('index.html')
 
-@app.route('/')
+@app.route('/command', methods=['GET', 'POST'])
 def command_line_interface():
-    command = request.args.get('command')
-    if command:
-        output = subprocess.check_output(command, shell=True)
+    if request.method == 'POST':
+        command = request.form['command']
+        try:
+            output = subprocess.check_output(command, shell=True).decode('utf-8')
+        except subprocess.CalledProcessError as e:
+            output = str(e)
     else:
-        output = None
+        output = ''
     return render_template('command_line.html', output=output)
 
 
-@app.route("/demo-customized-chatbot")
-def demo_customized_chatbot():
-    index, documents = customized.construct_index(directory_path_already_to_text)
-    customized.ask_ai(documents)
-    
 
 
 if __name__ == '__main__':
