@@ -62,18 +62,40 @@ def construct_index(directory_path):
 
     return index, documents
 
-def ask_ai(question, index, documents):
+
+def cybersecurity_checks(question_count):
+    if question_count > 10:
+        print(f"Maximum number of {question_count} questions reached. Number of questions is restricted as a way to implement cybersecurity checks and keep your data safe.")
+        return False
+    return True
+
+
+def ask_ai(question, index, documents, question_count):
+    '''Ask chatGPT the question'''
+    # Maintain cyber safety
+    cyber_checks = True
+    cyber_checks = cybersecurity_checks(question_count)
+    
+    if cyber_checks is False:
+        return None
+    
     query = f'*** {documents} + {question}'
     response = index.query(query)
-    return response.response
+    question_count += 1
+    return response.response, question_count
 
 
 if __name__ == "__main__":
     # # Use this path to generate text files
-    # directory_path_incoming_pdfs = '/Users/elsa/Documents/CODE/aiarchitects/data-science-nerds/ai-architects/chatbot_things/data_handling/data_ingest/incoming_pdfs'
+    # data-science-nerds/ai-architects/chatbot_things/data_handling/data_ingest/incoming_pdfs'
 
     # # Use this path once the files are already made
-    # directory_path_already_to_text = '/Users/elsa/Documents/CODE/aiarchitects/data-science-nerds/ai-architects/chatbot_things/data_handling/data_ingest/processed_text_files'
-
+    # /data-science-nerds/ai-architects/chatbot_things/data_handling/data_ingest/processed_text_files'
     index, documents = construct_index(directory_path_already_to_text)
-    ask_ai(question, index, documents)
+
+    question_count = 0
+    # limit total questions to prevent DDOS attacks
+    while question_count < 10:
+        question = input("Ask a question: ")
+        response, question_count = ask_ai(question, index, documents, question_count)
+        print(response)

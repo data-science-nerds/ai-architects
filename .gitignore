@@ -167,3 +167,5 @@ chatbot_things/data_handling/data_ingest/incoming_pdfs/*
 .DS_Store
 
 rootkey.csv
+
+flask_session/*

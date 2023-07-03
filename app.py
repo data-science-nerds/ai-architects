@@ -23,7 +23,8 @@ def demo_customized_chatbot():
     if request.method == 'POST':
         question = request.form['question']
         index, documents = customized.construct_index(directory_path_already_to_text)
-        response = customized.ask_ai(question, index, documents)
+        question_count = 0  # Define question_count here
+        response, question_count = customized.ask_ai(question, index, documents, question_count)
         return jsonify({'response': response})
     else:
         return render_template('chatbot.html')
