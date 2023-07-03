@@ -1,20 +1,16 @@
 import subprocess
 from flask import Flask, request, render_template, jsonify, session
+from flask import Flask, render_template, request, session, redirect, url_for
 import os
 import sys
 import signal
 
-# use customization code
-# from . import individuals_customized_chatbot as customized
 import chatbot_things.individuals_customized_chatbot as customized
 
 from chatbot_things.utilities.relative_paths import (
     directory_path_already_to_text,
     directory_path_incoming_pdfs,
 )
-
-from flask import Flask, request, render_template, jsonify
-# other imports...
 
 app = Flask(__name__, template_folder='flask_things/templates', static_folder='flask_things/static')
 flask_key = os.getenv("FLASK_KEY")
@@ -24,14 +20,6 @@ app.config['SESSION_TYPE'] = 'filesystem'
 
 @app.route("/demo-customized-chatbot", methods=['GET', 'POST'])
 def demo_customized_chatbot():
-    # if request.method == 'POST':
-    #     question = request.form['question']
-    #     index, documents = customized.construct_index(directory_path_already_to_text)
-    #     question_count = 0  # Define question_count here
-    #     response, question_count = customized.ask_ai(question, index, documents, question_count)
-    #     return jsonify({'response': response})
-    # else:
-    #     return render_template('chatbot.html')
     if 'questions' not in session:
         session['questions'] = []
 
@@ -45,9 +33,11 @@ def demo_customized_chatbot():
 
         response, _ = customized.ask_ai(question, index, documents, question_count)
         session['questions'].append((question, response))
-        return jsonify({'response': response})
+        session.modified = True  # Ensures the session is marked for saving
+        return redirect(url_for('demo_customized_chatbot'))  # Redirect to GET request
     else:
-        return render_template('chatbot.html', questions=session['questions'])
+        questions = session['questions']
+        return render_template('chatbot.html', questions=questions)
 
 
 
@@ -79,22 +69,7 @@ def spawn_child_process():
 
 @app.route('/')
 def index():
-    # Your other Flask app logic
     return render_template('index.html')
-
-@app.route('/command', methods=['GET', 'POST'])
-def command_line_interface():
-    if request.method == 'POST':
-        command = request.form['command']
-        try:
-            output = subprocess.check_output(command, shell=True).decode('utf-8')
-        except subprocess.CalledProcessError as e:
-            output = str(e)
-    else:
-        output = ''
-    return render_template('command_line.html', output=output)
-
-
 
 
 if __name__ == '__main__':

@@ -1,22 +1,28 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <title>Customized Chatbot</title>
+</head>
 <body>
-
-  <div class="question-history">
-    {% for question, response in questions %}
-      <div class="question">
-        <p>Please note you are allowed a total of 10 question submissions in order to keep your data safe.<p>
-        <p>Question: {{ question }}</p>
-        <p>Response: {{ response }}</p>
-      </div>
-    {% endfor %}
+    <h1>Customized Chatbot</h1>
+    <form id="chatbot-form" action="/demo-customized-chatbot" method="POST">
+        <input type="text" name="question" placeholder="Enter your question" required>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="response-container">
+      {% for question, response in questions %}
+      <p><strong>Question:</strong> {{ question }}</p>
+      <p><strong>Response:</strong> {{ response }}</p>
+      {% endfor %}
   </div>
+  
+  
 
-<form action="/demo-customized-chatbot" method="post">
-  <label for="question">Please submit your question:</label><br>
-  <input type="text" id="question" name="question"><br>
-  <input type="submit" value="Submit">
-</form> 
-
+    <script>
+        // Optional: Scroll to the bottom of the response container
+        var responseContainer = document.getElementById("response-container");
+        responseContainer.scrollTop = responseContainer.scrollHeight;
+    </script>
 </body>
 </html>
+
