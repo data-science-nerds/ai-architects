@@ -1,5 +1,5 @@
 import subprocess
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify, session
 import os
 import sys
 import signal
@@ -17,17 +17,37 @@ from flask import Flask, request, render_template, jsonify
 # other imports...
 
 app = Flask(__name__, template_folder='flask_things/templates', static_folder='flask_things/static')
+flask_key = os.getenv("FLASK_KEY")
+app.secret_key = flask_key
+app.config['SESSION_TYPE'] = 'filesystem'
+
 
 @app.route("/demo-customized-chatbot", methods=['GET', 'POST'])
 def demo_customized_chatbot():
+    # if request.method == 'POST':
+    #     question = request.form['question']
+    #     index, documents = customized.construct_index(directory_path_already_to_text)
+    #     question_count = 0  # Define question_count here
+    #     response, question_count = customized.ask_ai(question, index, documents, question_count)
+    #     return jsonify({'response': response})
+    # else:
+    #     return render_template('chatbot.html')
+    if 'questions' not in session:
+        session['questions'] = []
+
     if request.method == 'POST':
         question = request.form['question']
         index, documents = customized.construct_index(directory_path_already_to_text)
-        question_count = 0  # Define question_count here
-        response, question_count = customized.ask_ai(question, index, documents, question_count)
+        question_count = len(session['questions'])
+        
+        if question_count >= 9:
+            return jsonify({'response': 'Maximum number of questions reached.'})
+
+        response, _ = customized.ask_ai(question, index, documents, question_count)
+        session['questions'].append((question, response))
         return jsonify({'response': response})
     else:
-        return render_template('chatbot.html')
+        return render_template('chatbot.html', questions=session['questions'])
 
 
 

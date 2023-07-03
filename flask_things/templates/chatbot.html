@@ -2,8 +2,18 @@
 <html>
 <body>
 
+  <div class="question-history">
+    {% for question, response in questions %}
+      <div class="question">
+        <p>Please note you are allowed a total of 10 question submissions in order to keep your data safe.<p>
+        <p>Question: {{ question }}</p>
+        <p>Response: {{ response }}</p>
+      </div>
+    {% endfor %}
+  </div>
+
 <form action="/demo-customized-chatbot" method="post">
-  <label for="question">Enter your question:</label><br>
+  <label for="question">Please submit your question:</label><br>
   <input type="text" id="question" name="question"><br>
   <input type="submit" value="Submit">
 </form> 
