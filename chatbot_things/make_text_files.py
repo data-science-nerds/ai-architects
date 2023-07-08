@@ -13,5 +13,5 @@ if __name__ == '__main__':
     
     # read in pdf as text + imgs
     to_text = read_pdfs(incoming_pdfs_path)
-    # import pdb; pdb.set_trace()
+
     clean_text = cleanse_text(to_text)

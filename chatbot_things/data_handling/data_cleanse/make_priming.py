@@ -109,7 +109,6 @@ def cleanse_text(txt):
     # Convert dictionary back to a single string
     stripped_str = strip_spaces_and_newlines_in_dict(processed_dict)
     decision_str = parse_signed_value(stripped_str)
-    import pdb; pdb.set_trace()
     return decision_str  #final_string
 
 

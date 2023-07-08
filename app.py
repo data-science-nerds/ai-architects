@@ -1,6 +1,9 @@
-import subprocess
-from flask import Flask, request, render_template, jsonify, session
-from flask import Flask, render_template, request, session, redirect, url_for
+# import subprocess
+from flask import (
+    Flask, request, render_template, jsonify, session, redirect, url_for, g)
+from flask_session import Session
+# from flask_cognito import cognito_auth_required, CognitoAuthManager, current_cognito_jwt
+
 import os
 import sys
 import signal
@@ -16,16 +19,35 @@ app = Flask(__name__, template_folder='flask_things/templates', static_folder='f
 flask_key = os.getenv("FLASK_KEY")
 app.secret_key = flask_key
 app.config['SESSION_TYPE'] = 'filesystem'
+app.config['PERMANENT_SESSION_LIFETIME'] = 300  # session timeout in seconds
+Session(app)
 
+
+
+@app.before_request
+def before_request_func():
+    if 'documents_contents' not in session:
+        g.documents_contents = customized.load_documents_contents(directory_path_already_to_text)
+
+        session['documents_contents'] = g.documents_contents
 
 @app.route("/demo-customized-chatbot", methods=['GET', 'POST'])
 def demo_customized_chatbot():
     if 'questions' not in session:
         session['questions'] = []
 
+    # Initialize documents here
+    documents = session.get('documents', [])  # Use the documents from the session if available, otherwise default to an empty list
+    # list unique user's session info despite GET or POST methods
+    session['documents'] = documents  # Store the documents in the session for use in subsequent requests
+
+    # Use the documents_contents from the g object
+    documents_contents = g.get('documents_contents', [])
+
+
     if request.method == 'POST':
         question = request.form['question']
-        index, documents = customized.construct_index(directory_path_already_to_text)
+        index, documents, directory_path, documents_contents = customized.construct_index(directory_path_already_to_text)
         question_count = len(session['questions'])
         
         if question_count >= 9:
@@ -33,12 +55,14 @@ def demo_customized_chatbot():
 
         response, _ = customized.ask_ai(question, index, documents, question_count)
         session['questions'].append((question, response))
+        session['documents'] = documents
+        session['documents_contents'] = documents_contents  # Store the documents_contents in the session for use in subsequent requests
         session.modified = True  # Ensures the session is marked for saving
-        return redirect(url_for('demo_customized_chatbot'))  # Redirect to GET request
+        return redirect(url_for('demo_customized_chatbot', directory_path=directory_path))
     else:
         questions = session['questions']
-        return render_template('chatbot.html', questions=questions)
-
+        directory_path = request.args.get('directory_path', '')  # Get the directory_path from the URL if available
+        return render_template('chatbot.html', questions=questions, documents=documents, directory_path=directory_path, documents_contents=documents_contents)
 
 
 def handle_child_termination(signum, frame):

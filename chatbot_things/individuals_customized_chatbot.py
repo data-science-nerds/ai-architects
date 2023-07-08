@@ -5,9 +5,13 @@ import os
 import shutil
 import subprocess
 
+from flask import jsonify
+
 from dotenv import load_dotenv
 
-from llama_index import SimpleDirectoryReader, GPTListIndex, readers, GPTSimpleVectorIndex, LLMPredictor, PromptHelper, ServiceContext
+import openai
+
+from llama_index import SimpleDirectoryReader, GPTListIndex, readers, GPTVectorStoreIndex, LLMPredictor, PromptHelper, ServiceContext
 from langchain import OpenAI
 import sys
 from IPython.display import Markdown, display
@@ -29,12 +33,29 @@ subprocess.check_call(["pip", "install", "langchain==0.0.148"])
 
 
 load_dotenv()  # take environment variables from .env.
-api_key = os.getenv("OPEN_API_KEY")
-   
+api_key = os.getenv("OPENAI_API_KEY")
+# Here I fill my LOCAL environment variable
+os.environ["OPENAI_API_KEY"] = api_key
+
+
+def load_documents_contents(directory_path):
+    '''Use this to store priming and display it upon session initiation'''
+    # Load the documents
+    documents = SimpleDirectoryReader(directory_path).load_data()
+    documents_contents = []
+    for document in documents:
+        documents_contents.append(document.text)
+
+    return documents_contents
+
 
 # directory_path = '/Users/elsa/Documents/CODE/aiarchitects/data-science-nerds/ai-architects/chatbot_things/data_handling/data_ingest/incoming_pdfs'
 def construct_index(directory_path):
     '''Run models.'''
+    
+    # And here I fill the key to openAI
+    openai.api_key = os.environ["OPENAI_API_KEY"]
+    
     # directory_path = '/Users/elsa/Documents/CODE/aiarchitects/data-science-nerds/ai-architects/chatbot_things/data_handling/data_ingest/processed_text_files'
 
     # set maximum input size
@@ -51,16 +72,24 @@ def construct_index(directory_path):
 
     # define LLM
     llm_predictor = LLMPredictor(llm=OpenAI(temperature=0.2, model_name="text-davinci-003", max_tokens=num_outputs))
+    # llm_predictor = LLMPredictor(llm=OpenAI(temperature=0.2, model_name="text-curie-001", max_tokens=num_outputs))
 
     # Load the documents
     documents = SimpleDirectoryReader(directory_path).load_data()
 
     service_context = ServiceContext.from_defaults(llm_predictor=llm_predictor, prompt_helper=prompt_helper)
-    index = GPTSimpleVectorIndex.from_documents(documents, service_context=service_context)
+    index = GPTVectorStoreIndex.from_documents(documents, service_context=service_context)
 
     index.save_to_disk('index.json')
 
-    return index, documents
+    documents_contents = []
+    for document in documents:
+        print(dir(documents[0]))
+        documents_contents.append(document.text)
+        print(documents_contents)
+        # import pdb; pdb.set_trace()
+
+    return index, documents, directory_path, documents_contents
 
 
 def cybersecurity_checks(question_count):
@@ -92,7 +121,11 @@ if __name__ == "__main__":
     # # Use this path once the files are already made
     # /data-science-nerds/ai-architects/chatbot_things/data_handling/data_ingest/processed_text_files'
     index, documents = construct_index(directory_path_already_to_text)
-
+    print('##############')
+    print(jsonify(index))
+    print('##############')
+    print(f'documents!!!:{documents}')
+    print('##############')
     question_count = 0
     # limit total questions to prevent DDOS attacks
     while question_count < 10:
