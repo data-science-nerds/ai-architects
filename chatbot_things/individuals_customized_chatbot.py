@@ -25,7 +25,7 @@ repo_dir = "context_data"
 if os.path.exists(repo_dir):
     shutil.rmtree(repo_dir)  # Removes the directory and all its contents
 
-git.Git(".").clone("git@github.com:data-science-nerds/context_data.git")
+# git.Git(".").clone("git@github.com:data-science-nerds/context_data.git")
 
 # import subprocess
 subprocess.check_call(["pip", "install", "llama-index==0.5.6"])
