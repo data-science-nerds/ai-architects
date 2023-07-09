@@ -59,8 +59,9 @@ def demo_customized_chatbot():
         with open('chatbot_things/data_handling/collect_user_input/user_questions.txt', 'a') as f:
             f.write(question + '\n')
         # limit user input to protect api calls, only answer questions relevant to topic
-        # Append additional instructions to the question
-        instructions = "Only respond regarding information related to the CONTEXT INFORMATION"
+        # Append additional instructions to the question, but 
+        # do not make it visible to user
+        instructions = " Only respond regarding information related to the CONTEXT INFORMATION."
         question += instructions
         
         index, documents, directory_path, documents_contents = customized.construct_index(directory_path_already_to_text)

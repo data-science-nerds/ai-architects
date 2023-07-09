@@ -4,9 +4,19 @@
     <title>Customized Chatbot</title>
 </head>
 <body>
-    <h1>Customized Chatbot</h1>
+    <h1>Demo Customized Chatbot</h1>
+    <h3>by <a href = "mailto: help@architects.cloud">Elsa Velazquez</a>, AI Architect at <a href = "https://www.aihrprompts.com/">https://www.aihrprompts.com/</a and <a href = "https://ai-architects.cloud">https://ai-architects.cloud</a></h3>
+    <h2> Showcase examples of 2 security implementations (there can be more)</h2>
+    <p>Users can only input 10 questions per session.<br>
+        The text " Only respond regarding information related to the CONTEXT INFORMATION."
+        protects the API from being used for purposes beyond the specific use case INFORMATION.
+        <br>
+        The following is the use case info for this session as it is read in by the LLM.<br>
+        Note, in this demo, a contract in the form of a pdf is ingested and python automation
+        scrapes the file for relevant CONTEXT INFORMATION.
+    </p>
     {% for document_ in documents_contents %}
-        <p style="font-size: 18px;">Document content: {{ document_ }}</p>
+        <p style="font-size: 18px;">Scraped Document content: {{ document_ }}</p>
     {% endfor %}
     <form id="chatbot-form" action="/demo-customized-chatbot" method="POST">
         <input type="text" name="question" placeholder="Enter your question" required>
