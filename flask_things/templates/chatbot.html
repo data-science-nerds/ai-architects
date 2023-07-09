@@ -1,23 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Customized Chatbot</title>
+    <title>Demo Customized Chatbot by Elsa Velazquez</title>
 </head>
 <body>
     <h1>Demo Customized Chatbot</h1>
-    <h3>by <a href = "mailto: help@architects.cloud">Elsa Velazquez</a>, AI Architect at <a href = "https://www.aihrprompts.com/">https://www.aihrprompts.com/</a and <a href = "https://ai-architects.cloud">https://ai-architects.cloud</a></h3>
-    <h2> Showcase examples of 2 security implementations (there can be more)</h2>
-    <p>Users can only input 10 questions per session.<br>
-        The text " Only respond regarding information related to the CONTEXT INFORMATION."
+    <h2>by <a href = "mailto: help@architects.cloud">Elsa Velazquez</a>, AI Architect at <a href = "https://www.aihrprompts.com/" target="_blank">https://www.aihrprompts.com/</a> and <a href = "https://ai-architects.cloud" target="_blank">https://ai-architects.cloud</a></h2>
+    <p> Code resides in a private repo, please contact <a href = "mailto: help@architects.cloud">Elsa<a> for temporary access.  <a href="https://github.com/data-science-nerds" target=_blank>https://github.com/data-science-nerds</a></p>br>
+    <h3> In this demo, a contract in the form of a pdf is ingested and python automation
+        scrapes the file for relevant CONTEXT INFORMATION.</h3>
+    <h4> Showcase: examples of AI and automation (there can be more)</h4>
+    <ul>
+        <li>
+            Chatbot uses openAI's API. Specifically: <br>
+            langchain and llama-index with the "text-davinci-003" model.
+        </li>
+        <li>
+            Python automation is used to scrape relevant data efficiently and effectively.
+        </li>
+    </ul>
+    <h4> Showcase: examples of 2 security implementations (there can be more)</h4>
+    <ul>
+        <li>
+            Users can only input 10 questions per session.
+        </li>
+        <li>
+            The text " Only respond regarding information related to the CONTEXT INFORMATION."
         protects the API from being used for purposes beyond the specific use case INFORMATION.
-        <br>
+        </li>
+    </ul>
+    
+    <br>
         The following is the use case info for this session as it is read in by the LLM.<br>
-        Note, in this demo, a contract in the form of a pdf is ingested and python automation
-        scrapes the file for relevant CONTEXT INFORMATION.
+        
     </p>
     {% for document_ in documents_contents %}
         <p style="font-size: 18px;">Scraped Document content: {{ document_ }}</p>
     {% endfor %}
+    <hr>
+    <hr>
     <form id="chatbot-form" action="/demo-customized-chatbot" method="POST">
         <input type="text" name="question" placeholder="Enter your question" required>
         <button type="submit">Submit</button>

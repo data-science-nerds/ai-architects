@@ -1,6 +1,3 @@
-# ! git clone https://github.com/irina1nik/context_data.git
-# ! git clone https://github.com/elsaVelazquez/context_data
-import git
 import os
 import shutil
 import subprocess
