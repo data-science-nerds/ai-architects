@@ -1,6 +1,6 @@
 import re
 import json
-import pprint
+# from pprint import pprint
 from str_delimiters import slice_dict
 
 
@@ -15,20 +15,19 @@ def decisions(stripped_str):
             break
 
     parsed_dict = {'refund check': right_answer}
-    print(parsed_dict)
     return parsed_dict
 
 
 def parse_signed_value(dictionary):
-    if 'signed' in dictionary:
-        value = dictionary['signed']
+    if 'amendments' in dictionary:
+        value = dictionary['amendments']
         if value is not None:
             # Apply the desired logic to the 'signed' value
             # For example, splitting it based on a specific pattern
             parsed_value = value.split("\n")[0].strip()
 
             # Update the dictionary with the parsed value
-            dictionary['signed'] = decisions(parsed_value)
+            dictionary['amendments'] = decisions(parsed_value)
 
     return dictionary
 
@@ -77,7 +76,7 @@ def pretty_print(d):
     print(json.dumps(d, indent=4, sort_keys=True))
 
 
-def slice_string(txt, slice_dict):
+def slice_string(txt):
     """
     This function receives a string and a dictionary with slice information,
     and returns a new dictionary with the sliced strings.
@@ -94,9 +93,10 @@ def slice_string(txt, slice_dict):
                 if end != -1: # Ensure end marker was found
                     sliced_txt[key] = txt[start:end] # Exclude the start and end markers from the slice
         # import pdb; pdb.set_trace()
-        if key == "signed" and "AUDIT\n\n" in sliced_txt:
-            sliced_txt[key] += txt[txt.find("AUDIT\n\n") + len("AUDIT"):] # Append everything from "Manager" onwards until the end of the document
+        if key == "amendments" and "AUDIT" in sliced_txt:
+            sliced_txt[key] += txt[txt.find("AUDIT") + len("AUDIT"):] # Append everything from "Manager" onwards until the end of the document
     return sliced_txt
+
 
 def cleanse_text(txt):
     sliced_txt = slice_string(txt, slice_dict)

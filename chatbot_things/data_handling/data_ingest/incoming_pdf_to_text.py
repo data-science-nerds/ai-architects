@@ -1,6 +1,16 @@
 import os
 from pdf2image import convert_from_path
 import pytesseract
+from pprint import pprint
+
+from transform_before_load import (
+    slice_dict_strings,
+    clean_dictionary,
+    process_dictionary,
+    strip_spaces_and_newlines_in_dict,
+    parse_signed_value,
+    shorten_str_to_dict,
+)
 
 
 def only_pdfs(incoming_pdfs_path):
@@ -28,6 +38,7 @@ def write_text_file(directory, filename, text):
     with open(f'{directory}{filename}.txt', 'w') as f:
         f.write(text)
 
+
 def slice_text(all_text):
     # find the start and end of the desired sections
     start1 = all_text.find("\n\nSUMMARY OF KEY INFORMATION\n\n")
@@ -43,13 +54,23 @@ def slice_text(all_text):
     text1 = all_text[start1:end1]
     text2 = all_text[start2:]
 
-    # # remove duplicate lines from the second section
-    # lines = text2.split('\n')
-    # unique_lines = list(dict.fromkeys(lines))  # this removes duplicates while preserving order
-    # text2_unique = '\n'.join(unique_lines)
-
     return text1 + "\n" + text2
-    
+
+
+def cleanse_text(txt):
+    '''Apply python automation to format LLM's CONTEXT.'''
+    shortened_to_dict = shorten_str_to_dict(txt)
+    sliced_dict = slice_dict_strings(shortened_to_dict)
+    # Apply cleaning, extraction, and processing functions
+    clean_dict = clean_dictionary(sliced_dict)
+    processed_dict = process_dictionary(clean_dict)
+    # Convert dictionary back to a single string
+    stripped_dict = strip_spaces_and_newlines_in_dict(processed_dict)
+    decision_str = parse_signed_value(stripped_dict)
+    pprint(decision_str)
+    return str(decision_str)  #final_string
+
+
 def read_pdfs(incoming_pdfs_path):
     paths = only_pdfs(incoming_pdfs_path)
 
@@ -63,8 +84,9 @@ def read_pdfs(incoming_pdfs_path):
         images = images_from_pdf(path)
         all_text = extract_text(images)
         select_text = slice_text(all_text)
+        cleaned_text = cleanse_text(select_text)
         
-        write_text_file(directory, filename, select_text)
+        write_text_file(directory, filename, cleaned_text)
 
     return select_text
 

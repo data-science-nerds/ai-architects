@@ -17,7 +17,7 @@ slice_dict = {
     "total rent": ("Total monthly rent (Par. 6)", "Bf Late fees if rent is not paid on or before"),
     "begin late fee": ("Bf Late fees if rent is not paid on or before (Par. 6) ", "@ Returned-check charge"),
     "bounced check ": ("@ Returned-check charge (Par. 6)", "# Monthly animal rent (if any)"),
-    " animal rent": ("# Monthly animal rent (if any)", "# Monthly pest control (if any)"),
+    "animal rent": ("# Monthly animal rent (if any)", "# Monthly pest control (if any)"),
     "pest control": ("# Monthly pest control (if any)", "Repair or service call fee"),
     "repairman": ("@ Repair or service call fee (Par. 6)", "H Prorated rent (Par. 6) for (check one)"),
     "prorated": ("Prorated rent (Par. 6) for (check one)", "Hf Daily late fee"), #O first month ORO secondmonth 
