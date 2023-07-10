@@ -7,13 +7,19 @@
     <h1>Demo Customized Chatbot</h1>
     <h2>by <a href = "mailto: help@architects.cloud">Elsa Velazquez</a>, AI Architect at <a href = "https://www.aihrprompts.com/" target="_blank">https://www.aihrprompts.com/</a> and <a href = "https://ai-architects.cloud" target="_blank">https://ai-architects.cloud</a></h2>
     <p> Code resides in a private repo, please contact <a href = "mailto: help@architects.cloud">Elsa<a> for temporary access.  <a href="https://github.com/data-science-nerds" target=_blank>https://github.com/data-science-nerds</a></p>br>
-    <h3> In this demo, a contract in the form of a pdf is ingested and python automation
+    <h3> In this demo, a pdf is ingested and python automation
         scrapes the file for relevant CONTEXT INFORMATION.</h3>
     <h4> Showcase: examples of AI and automation (there can be more)</h4>
     <ul>
         <li>
             Chatbot uses openAI's API. Specifically: <br>
-            langchain and llama-index with the "text-davinci-003" model.
+            langchain and llama-index with the "text-davinci-003" model, <br>
+            then CONTEXT_DATA is transformed into vectors using GPTVectorStoreIndex <br>
+            that look as such:<br>
+            <code>
+                {"index_struct": {"__type__": "simple_dict", "__data__": {"index_id": "bb7ae94d-3187-4ce7-bd01-7a9299281832", "summary": null, "nodes_dict": {"99b2082a-9837-4015-8839-35a2b051599c": "4120fe9e-abdf-4047-884e-32a5b852c049"}, "doc_id_dict": {"b92951c2-96ad-4991-8746-31c01ff7c6a9": ["99b2082a-9837-4015-8839-35a2b051599c"]}, "embeddings_dict": {"99b2082a-9837-4015-8839-35a2b051599c": [-0.017816301435232162, 0.021376656368374825, 0.011320472694933414, -0.008283272385597229, -0.02326582372188568, 0.02274267002940178, -0.005413191393017769, -0. ...and so on ...<br>
+            </code>
+
         </li>
         <li>
             Python automation is used to scrape relevant data efficiently and effectively.
