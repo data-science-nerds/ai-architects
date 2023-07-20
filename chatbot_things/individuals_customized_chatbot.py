@@ -84,7 +84,7 @@ def construct_index(directory_path):
         print(dir(documents[0]))
         documents_contents.append(document.text)
         print(documents_contents)
-        # import pdb; pdb.set_trace()
+        
 
     return index, documents, directory_path, documents_contents
 

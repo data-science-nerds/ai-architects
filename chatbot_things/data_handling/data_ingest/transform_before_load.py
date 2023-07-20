@@ -9,18 +9,24 @@ from pprint import pprint
 
 # from ...utilities.relative_paths import directory_path_already_to_text
 
-# directory_path_already_to_text = '../ai-architects/chatbot_things/data_handling/data_ingest/processed_text_files'
- 
+# directory_path_already_to_text = '../ai-architects/chatbot_things/data_handling/data_ingest/processed_text_files' 
+
+
 def decisions(stripped_str):
     split_values = stripped_str.split("OR")
 
     right_answer = None
     for value in split_values:
         trimmed_value = value.strip()
-        if not trimmed_value.startswith('0'):
+        if '0' not in trimmed_value:
             right_answer = trimmed_value
             break
-
+        elif '&' in trimmed_value:
+            right_answer = trimmed_value
+            break
+        else:
+            right_answer = 'NA'
+    right_answer = right_answer.replace('&', '')
     parsed_dict = {'refund check': right_answer}
     return parsed_dict
 
@@ -87,9 +93,15 @@ def clean_value(key, value):
     This helper function cleans the given value based on the key.
     """
     drop_chars = ['Unit #', '@', '$#', 'H', '$$', '$', 'B Initial late fee (Par. 6) §_ 126.00 or']
+    starts_with = ['(Par. 5) for', '%', 'staying more than__']
+
     for char in drop_chars:
         if value.endswith(char):
             value = re.sub(re.escape(char) + r'\Z', '', value)
+
+    for start_ in starts_with:
+        if value.startswith(start_):
+            value = re.sub(re.escape(start_) + r'\A', '', value)
 
     if key == 'Address':
         if value.endswith('Unit #'):
@@ -106,7 +118,6 @@ def clean_value(key, value):
             if '0' not in val:
                 value = val
                 break
-    
     return value
 
 
@@ -128,8 +139,39 @@ def shorten_str_to_dict(txt)-> dict:
                     txt_to_dict[key] = txt[start:end] # Exclude the start and end markers from the slice
         if key == "signed" and "AUDIT\n\n" in txt_to_dict:
             txt_to_dict[key] += txt[txt.find("AUDIT\n\n") + len("AUDIT"):] # Append everything from "Manager" onwards until the end of the document
-    print(f'output from shorten_str: {txt_to_dict}\n{type(txt_to_dict)}')
+    # print(f'output from shorten_str: {txt_to_dict}\n{type(txt_to_dict)}')
     return txt_to_dict
+
+
+def clean_ammendments(ammendments_str: str) -> str:
+    """Reduce ammendments to only necessary ones."""
+    if not isinstance(ammendments_str, str):
+        print("Error: Expected str but received: ", type(ammendments_str))
+        return []
+    # print(ammendments_str)
+    signed_ammendments = []
+    # for amendment in ammendments_str:
+    if 'signed' in ammendments_str:
+        signed_ammendments = ammendments_str.split(':')
+    # return signed_ammendments
+    signed = []
+    for str_ in signed_ammendments:
+        if 'signed' in str_ and 'documents' not in str_ and 'DOCUMENT' not in str_:
+            str_ = str_.split("signed")[1]
+            signed.append(str_)
+    
+    # drop any dates
+    list_without_dates = [item.rsplit(' ', 3)[0] for item in signed]
+    
+    # keep only unique items
+    my_set = set(list_without_dates)
+
+    # If you need a list again, you can convert it back
+    unique_list = list(my_set)
+
+    return unique_list
+
+
 
 
 def slice_dict_strings(shortened_dict: dict) -> dict:
@@ -141,10 +183,9 @@ def slice_dict_strings(shortened_dict: dict) -> dict:
     for key, value in shortened_dict.items():
         shortened_dict[key] = clean_value(key, value)
     # pprint(shortened_dict)
-    
-    # Rename the "signed" key to "amendments"
-    if 'signed' in shortened_dict:
-        shortened_dict['amendments'] = shortened_dict['signed']
-        del shortened_dict['signed']
 
+    # Rename the "signed" key to "ammendments"
+    if 'signed' in shortened_dict:
+        shortened_dict['ammendments'] = shortened_dict['signed']
+        del shortened_dict['signed']
     return shortened_dict

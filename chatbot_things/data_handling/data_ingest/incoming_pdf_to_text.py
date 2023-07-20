@@ -10,6 +10,7 @@ from transform_before_load import (
     strip_spaces_and_newlines_in_dict,
     parse_signed_value,
     shorten_str_to_dict,
+    clean_ammendments,
 )
 
 
@@ -59,16 +60,36 @@ def slice_text(all_text):
 
 def cleanse_text(txt):
     '''Apply python automation to format LLM's CONTEXT.'''
-    shortened_to_dict = shorten_str_to_dict(txt)
+    # Convert scraped text  to dictionary
+    shortened_to_dict0 = shorten_str_to_dict(txt)
+    # 
+    shortened_to_dict = strip_spaces_and_newlines_in_dict(shortened_to_dict0)
     sliced_dict = slice_dict_strings(shortened_to_dict)
     # Apply cleaning, extraction, and processing functions
     clean_dict = clean_dictionary(sliced_dict)
     processed_dict = process_dictionary(clean_dict)
     # Convert dictionary back to a single string
     stripped_dict = strip_spaces_and_newlines_in_dict(processed_dict)
-    decision_str = parse_signed_value(stripped_dict)
-    pprint(decision_str)
-    return str(decision_str)  #final_string
+    decision_dict = parse_signed_value(stripped_dict)
+    
+    # keep only relevant ammendments
+    if 'ammendments' in decision_dict.keys():
+        # Get the "ammendments" value from the dictionary
+        ammendments_str = decision_dict.get('ammendments')
+
+        # Clean the ammendments string
+        cleaned_ammendments = clean_ammendments(ammendments_str)
+        # Update the dictionary with the cleaned ammendments
+        decision_dict['ammendments'] = cleaned_ammendments
+    
+    # Sufficient security because resides in the cloud and 
+    # would minimally require pem keys to intercept, 
+    # which is not likely for a demo
+    if 'Address' in decision_dict.keys():
+        decision_dict["Address"] = "removed for security"
+    
+    # put back into string format
+    return str(decision_dict)  #final_string
 
 
 def read_pdfs(incoming_pdfs_path):
@@ -77,18 +98,19 @@ def read_pdfs(incoming_pdfs_path):
     for path in paths:
         filename = os.path.splitext(os.path.basename(path))[0]
         print(f'Extracting data for {filename}')
-        
+
         directory = 'chatbot_things/data_handling/data_ingest/processed_text_files/'
         os.makedirs(directory, exist_ok=True)
 
         images = images_from_pdf(path)
         all_text = extract_text(images)
+        
         select_text = slice_text(all_text)
         cleaned_text = cleanse_text(select_text)
-        
+        print(cleaned_text)
         write_text_file(directory, filename, cleaned_text)
 
-    return select_text
+    return cleaned_text
 
 
 if __name__ == "__main__":
