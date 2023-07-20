@@ -4,50 +4,17 @@
     <title>Demo Customized Chatbot by Elsa Velazquez</title>
 </head>
 <body>
-    <h1>Demo Customized Chatbot</h1>
-    <h2></h2>
-    <h2>by <a href = "mailto: help@architects.cloud">Elsa Velazquez</a>, AI Architect at <a href = "https://www.aihrprompts.com/" target="_blank">https://www.aihrprompts.com/</a> and <a href = "https://ai-architects.cloud" target="_blank">https://ai-architects.cloud</a></h2>
-    <p> Code resides in a private repo, please contact <a href = "mailto: help@architects.cloud">Elsa<a> for temporary access.  <a href="https://github.com/data-science-nerds" target=_blank>https://github.com/data-science-nerds</a></p>br>
-    <h3> In this demo, a pdf is ingested and python automation
-        scrapes the file for relevant CONTEXT INFORMATION.</h3>
-    <h4> Showcase: examples of AI and automation (there can be more)</h4>
-    <ul>
-        <li>
-            Chatbot uses openAI's API. Specifically: <br>
-            langchain and llama-index with the "text-davinci-003" model, <br>
-            then CONTEXT_DATA is transformed into vectors using GPTVectorStoreIndex <br>
-            that look as such:<br>
-            <code>
-                {"index_struct": {"__type__": "simple_dict", "__data__": {"index_id": "bb7ae94d-3187-4ce7-bd01-7a9299281832", "summary": null, "nodes_dict": {"99b2082a-9837-4015-8839-35a2b051599c": "4120fe9e-abdf-4047-884e-32a5b852c049"}, "doc_id_dict": {"b92951c2-96ad-4991-8746-31c01ff7c6a9": ["99b2082a-9837-4015-8839-35a2b051599c"]}, "embeddings_dict": {"99b2082a-9837-4015-8839-35a2b051599c": [-0.017816301435232162, 0.021376656368374825, 0.011320472694933414, -0.008283272385597229, -0.02326582372188568, 0.02274267002940178, -0.005413191393017769, -0. ...and so on ...<br>
-            </code>
+    <h1>Demo Customized Chatbot, NLP and LLMs (not yet prepped for UX/UI)</h1>
 
-        </li>
-        <li>
-            Python automation is used to scrape relevant data efficiently and effectively.
-        </li>
-    </ul>
-    <h4> Showcase: examples of 2 security implementations (there can be more)</h4>
-    <ul>
-        <li>
-            Users can only input 10 questions per session.
-        </li>
-        <li>
-            The text " Only respond regarding information related to the CONTEXT INFORMATION."
-        protects the API from being used for purposes beyond the specific use case INFORMATION.
-        </li>
-    </ul>
-    
-    <br>
-        The following is the use case info for this session as it is read in by the LLM.<br>
-        
-    </p>
-    {% for document_ in documents_contents %}
-        <p style="font-size: 18px;">Scraped Document content: {{ document_ }}</p>
-    {% endfor %}
+    <h4>by <a href = "mailto: help@architects.cloud">Elsa Velazquez</a>, AI Architect at <a href = "https://www.aihrprompts.com/" target="_blank">https://www.aihrprompts.com/</a> and <a href = "https://ai-architects.cloud" target="_blank">https://ai-architects.cloud</a>, Code: <a href="https://github.com/data-science-nerds/ai-architects" target=_blank>https://github.com/data-science-nerds/ai-architects</a></h4>
+
+    <h5> In this demo, a chatbot answers 10 questions on specific client data about their rental lease. The pdf contract is ingested using python automation by scraping relevant CONTEXT INFORMATION.  The CONTEXT INFORMATION is then passed to vector store and this is the only relevant context the model can answer about.</h5>
+
     <hr>
     <hr>
+    <div style="background-color: lightgreen;">
     <form id="chatbot-form" action="/demo-customized-chatbot" method="POST">
-        <input type="text" name="question" placeholder="Enter your question" required>
+        <input type="text" name="question" placeholder="Enter your question" required style="color: red; font-weight: bold;">
         <button type="submit">Submit</button>
     </form>
     <div id="response-container">
@@ -56,6 +23,50 @@
         <p><strong>Response:</strong> {{ response }}</p>
         {% endfor %}
     </div>
+    </div>
+    <hr>
+    <hr>
+
+    The following is the scraped data used for this session as it is cleansed and transformed for use by the LLM.<br>
+        
+    </p>
+    {% for document_ in documents_contents %}
+        <p style="font-size: 18px;">Scraped Document content: {{ document_ }}</p>
+    {% endfor %}
+
+    <hr>
+
+    <table style="width:100%">
+    <tr>
+        <th>Showcase: examples of AI and Python Automation (there can be more)</th>
+        <th>Showcase: examples of 2 security implementations (there can be more)</th>
+    </tr>
+    <tr>
+        <td>
+        <ul>
+            <li>Chatbot uses openAI's API. Specifically:
+            <ul>
+                <li>langchain and llama-index with the "text-davinci-003" model</li>
+                <li>then CONTEXT_DATA is transformed into vectors using GPTVectorStoreIndex that look as such:</li>
+                <li>{"index_struct": {"__type__": "simple_dict", "__data__": {"index_id": "bb7ae94d-3187-4ce7-bd01-7a9299281832", "summary": null, "nodes_dict": {"99b2082a-9837-4015-8839-35a2b051599c": "4120fe9e-abdf-4047-884e-32a5b852c049"}, "doc_id_dict": {"b92951c2-96ad-4991-8746-31c01ff7c6a9": ["99b2082a-9837-4015-8839-35a2b051599c"]}, "embeddings_dict": {"99b2082a-9837-4015-8839-35a2b051599c": [-0.017816301435232162, 0.021376656368374825, 0.011320472694933414, -0.008283272385597229, -0.02326582372188568, 0.02274267002940178, -0.005413191393017769, -0. ...and so on ...</li>
+            </ul>
+            </li>
+            <li>Python automation is used to scrape relevant data efficiently and effectively.</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li>Users can only input 10 questions per session.</li>
+            <li>The text " Only respond regarding information related to the CONTEXT INFORMATION." protects the API from being used for purposes beyond the specific use case.</li>
+            <li>The data is scraped from a pdf contract, and does not connect to the appfolio API in order to maintain some control of the accessibility of data and make it less platform reliant. This drives costs down and allows more freedom. It can be cross checked with data from appfolio, but that is outside the scope of this demo.</li>
+        </ul>
+        </td>
+    </tr>
+    </table>
+    
+
+    <br>
+        
 
 
     <script>

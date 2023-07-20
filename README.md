@@ -25,31 +25,10 @@ The preferred outcome is that the model performs the best possible, linguistical
 so the user does not need to call the rental property.
 Cost comparison shows that a user will be less likely to ask more quesitons if their unique data is displayed prior to them asking further questions, but to have an employee answer the phone and respond will far be more costly than to pay the extr dime for a superior model.
 
-### LOCAL DEVELOPMENT AND DEBUGGING
-to run Flask app:
-# ssh into ec2 instance on aws
-ssh -i /Users/elsa/Documents/CODE/aiarchitects/ai-architects-flask-key-pair.pem ubuntu@ec2-3-92-237-8.compute-1.amazonaws.com
-
-# make sure there are no current instances
-lsof -i :5000
-# if there are, kill them
-kill -9 <pid>
-
-# run from root
-```
-python3 app.py --port 5000
-```
-
+### To run
 
 To run as code, run entire process by command line :
 
 ```
 python3 customized-by-user-chatbot.py
 ```
-
-
-# fixes for common bugs
-
-## permissions
-## would use sudo in aws instance
-chmod u+rwx /Users/elsa/Documents/CODE/aiarchitects/data-science-nerds
