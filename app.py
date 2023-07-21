@@ -8,6 +8,9 @@ import os
 import sys
 import signal
 
+import logging
+logging.basicConfig(level=logging.INFO)
+
 import chatbot_things.individuals_customized_chatbot as customized
 
 from chatbot_things.utilities.relative_paths import (
@@ -29,6 +32,15 @@ Session(app)
 def before_request_func():
     session.permanent = True
     if 'documents_contents' not in session:
+        # try opening the files
+        logging.info(f'Trying to open file: {directory_path_already_to_text}')
+        try:
+            with open(directory_path_already_to_text, 'r') as f:
+                contents = f.read()
+            logging.info('File opened successfully.')
+            logging.info(f'File contents: {contents}')
+        except Exception as e:
+            logging.error(f'Failed to open file: {e}')
         g.documents_contents = customized.load_documents_contents(directory_path_already_to_text)
         print(f'@app.before_request g.documents_contents: {g.documents_contents}')
         session['documents_contents'] = g.documents_contents
