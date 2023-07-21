@@ -30,7 +30,7 @@ def before_request_func():
     session.permanent = True
     if 'documents_contents' not in session:
         g.documents_contents = customized.load_documents_contents(directory_path_already_to_text)
-
+        print(f'@app.before_request g.documents_contents: {g.documents_contents}')
         session['documents_contents'] = g.documents_contents
 
 @app.route("/demo-customized-chatbot", methods=['GET', 'POST'])
@@ -46,6 +46,7 @@ def demo_customized_chatbot():
     # Use the documents_contents from the g object
     # documents_contents = g.get('documents_contents', [])
     # # Load the documents_contents here
+    print(f'@app.route("/demo-customized-chatbot documents: {documents}')
     documents_contents = customized.load_documents_contents(directory_path_already_to_text)
 
 
@@ -56,8 +57,11 @@ def demo_customized_chatbot():
         # Write the question to a file as a simple way to store types of questions
         # For a production environment depending on client use case, could save
         # using SQLAlchemy
-        with open('chatbot_things/data_handling/collect_user_input/user_questions.txt', 'a') as f:
-            f.write(question + '\n')
+        try:
+            with open('chatbot_things/data_handling/collect_user_input/user_questions.txt', 'a') as f:
+                f.write(question + '\n')
+        except Exception:
+            print("Not able to write to file")
         # limit user input to protect api calls, only answer questions relevant to topic
         # Append additional instructions to the question, but 
         # do not make it visible to user
@@ -65,6 +69,7 @@ def demo_customized_chatbot():
         question += instructions
         
         index, documents, directory_path, documents_contents = customized.construct_index(directory_path_already_to_text)
+        print(f'request.method == POST:  index: {index} \n documents: {documents} \n directory_path: {directory_path} \n documents_contents: {documents_contents}')
         question_count = len(session['questions'])
         
         if question_count >= 9:
